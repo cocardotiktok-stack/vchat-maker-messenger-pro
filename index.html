@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="vChat Maker Messenger Pro - Crea videos de chats ficticios para TikTok, Reels y Shorts" />
+  <title>vChat Maker Messenger Pro</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">💬</span>
+        <div>
+          <h1>vChat Maker</h1>
+          <span class="logo-sub">Messenger Pro</span>
+        </div>
+      </div>
+      <div class="header-status" id="apiStatus">
+        <span class="status-dot"></span>
+        <span class="status-text">Comprobando APIs...</span>
+      </div>
+    </header>
+
+    <!-- Navegación principal -->
+    <nav class="main-nav">
+      <button class="nav-btn active" data-section="personajes">👤 Personajes</button>
+      <button class="nav-btn" data-section="historia">📖 Historia</button>
+      <button class="nav-btn" data-section="editor">✏️ Editor</button>
+      <button class="nav-btn" data-section="preview">🎬 Preview</button>
+      <button class="nav-btn" data-section="exportar">⬇️ Exportar</button>
+      <button class="nav-btn" data-section="config">⚙️ Config</button>
+    </nav>
+
+    <!-- Contenido de secciones -->
+    <main class="main-content">
+
+      <!-- SECCIÓN PERSONAJES -->
+      <section id="section-personajes" class="section active">
+        <div class="section-header">
+          <h2>Personajes</h2>
+          <button class="btn btn-primary" id="btnAddPersonaje">+ Añadir personaje</button>
+        </div>
+        <p class="section-desc">Crea los personajes de tu chat. Cada uno necesita nombre, foto y voz.</p>
+        <div id="personajesList" class="personajes-grid"></div>
+        <div class="empty-state" id="personajesEmpty">
+          <div class="empty-icon">👥</div>
+          <p>Aún no hay personajes. Añade al menos 2 para crear una conversación.</p>
+        </div>
+      </section>
+
+      <!-- SECCIÓN HISTORIA -->
+      <section id="section-historia" class="section">
+        <div class="section-header">
+          <h2>Crear Historia</h2>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="ia">🤖 Con IA</button>
+          <button class="tab" data-tab="propia">✍️ Mi idea</button>
+        </div>
+
+        <div id="tab-ia" class="tab-content active">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Género</label>
+              <select id="genero">
+                <option value="drama">Drama</option>
+                <option value="romance">Romance</option>
+                <option value="terror">Terror</option>
+                <option value="misterio">Misterio</option>
+                <option value="comedia">Comedia</option>
+                <option value="suspenso">Suspenso</option>
+                <option value="accion">Acción</option>
+                <option value="ciencia-ficcion">Ciencia ficción</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tono</label>
+              <select id="tono">
+                <option value="serio">Serio</option>
+                <option value="emocional">Emocional</option>
+                <option value="humoristico">Humorístico</option>
+                <option value="oscuro">Oscuro</option>
+                <option value="ligero">Ligero</option>
+                <option value="intenso">Intenso</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tema / Idea breve</label>
+              <input type="text" id="tema" placeholder="Ej: una traición entre amigos" />
+            </div>
+            <div class="form-group">
+              <label>Tipo de final</label>
+              <select id="final">
+                <option value="abierto">Abierto / cliffhanger</option>
+                <option value="feliz">Feliz</option>
+                <option value="triste">Triste</option>
+                <option value="sorpresa">Sorpresa</option>
+                <option value="tragico">Trágico</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Duración del video</label>
+              <select id="duracion">
+                <option value="1:00">1:00</option>
+                <option value="1:12">1:12</option>
+                <option value="1:30" selected>1:30</option>
+                <option value="1:45">1:45</option>
+                <option value="2:00">2:00</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg" id="btnGenerarHistoria">✨ Generar historia con IA</button>
+        </div>
+
+        <div id="tab-propia" class="tab-content">
+          <div class="form-group">
+            <label>Escribe tu idea o argumento</label>
+            <textarea id="ideaUsuario" rows="5" placeholder="Ej: Ana descubre que Carlos le ha mentido sobre su trabajo. Ella lo confronta por chat y él intenta justificarse..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Duración del video</label>
+            <select id="duracionPropia">
+              <option value="1:00">1:00</option>
+              <option value="1:12">1:12</option>
+              <option value="1:30" selected>1:30</option>
+              <option value="1:45">1:45</option>
+              <option value="2:00">2:00</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-lg" id="btnGenerarPropia">✨ Convertir mi idea en chat</button>
+        </div>
+
+        <div id="historiaResultado" class="historia-resultado hidden">
+          <h3 id="historiaTitulo"></h3>
+          <p id="historiaResumen" class="resumen"></p>
+          <button class="btn btn-secondary" id="btnIrEditor">Ir al editor de mensajes →</button>
+        </div>
+      </section>
+
+      <!-- SECCIÓN EDITOR -->
+      <section id="section-editor" class="section">
+        <div class="section-header">
+          <h2>Editor de conversación</h2>
+          <div class="header-actions">
+            <button class="btn btn-secondary btn-sm" id="btnAddMensaje">+ Mensaje</button>
+            <button class="btn btn-secondary btn-sm" id="btnRegenerarTodo">🔄 Regenerar todo</button>
+          </div>
+        </div>
+        <p class="section-desc">Edita, reordena o regenera mensajes. Un personaje puede enviar varios mensajes seguidos.</p>
+        <div id="mensajesList" class="mensajes-list"></div>
+        <div class="empty-state" id="mensajesEmpty">
+          <div class="empty-icon">💬</div>
+          <p>No hay mensajes. Genera una historia o añade mensajes manualmente.</p>
+        </div>
+      </section>
+
+      <!-- SECCIÓN PREVIEW -->
+      <section id="section-preview" class="section">
+        <div class="section-header">
+          <h2>Previsualización</h2>
+        </div>
+
+        <div class="preview-controls">
+          <div class="form-group">
+            <label>Fondo del video</label>
+            <div class="upload-row">
+              <input type="file" id="fondoInput" accept="image/*,video/*" hidden />
+              <button class="btn btn-secondary" id="btnElegirFondo">📷 Elegir de galería</button>
+              <button class="btn btn-ghost" id="btnFondoDefault">Usar fondo por defecto</button>
+            </div>
+            <div id="fondoPreview" class="fondo-preview hidden"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Oscurecimiento del fondo</label>
+            <input type="range" id="fondoOscurecer" min="0" max="80" value="40" />
+            <span id="fondoOscurecerVal">40%</span>
+          </div>
+
+          <div class="form-group">
+            <label>Tamaño del chat (dentro del video)</label>
+            <input type="range" id="chatSize" min="60" max="92" value="78" />
+            <span id="chatSizeVal">78%</span>
+          </div>
+
+          <div class="form-group">
+            <label>Marca de agua</label>
+            <input type="text" id="watermarkText" placeholder="Tu texto o @usuario" value="vChat Maker" />
+            <div class="row-2">
+              <div>
+                <label class="small">Opacidad</label>
+                <input type="range" id="watermarkOpacity" min="10" max="80" value="35" />
+              </div>
+              <div>
+                <label class="small">Posición</label>
+                <select id="watermarkPos">
+                  <option value="bottom-right">Abajo derecha</option>
+                  <option value="bottom-left">Abajo izquierda</option>
+                  <option value="top-right">Arriba derecha</option>
+                  <option value="top-left">Arriba izquierda</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vista previa del chat animado -->
+        <div class="preview-stage-wrapper">
+          <div class="preview-stage" id="previewStage">
+            <div class="video-frame" id="videoFrame">
+              <div class="bg-layer" id="bgLayer"></div>
+              <div class="bg-overlay" id="bgOverlay"></div>
+              <div class="chat-window" id="chatWindow">
+                <div class="chat-header-bar">
+                  <span class="chat-title">Chat</span>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+              </div>
+              <div class="watermark" id="watermarkEl">vChat Maker</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-actions">
+          <button class="btn btn-primary" id="btnPlayPreview">▶️ Reproducir preview</button>
+          <button class="btn btn-secondary" id="btnStopPreview">⏹️ Detener</button>
+          <button class="btn btn-secondary" id="btnGenerarVoces">🎤 Generar voces</button>
+        </div>
+        <div id="previewProgress" class="progress-bar hidden">
+          <div class="progress-fill" id="previewProgressFill"></div>
+          <span id="previewProgressText">0%</span>
+        </div>
+      </section>
+
+      <!-- SECCIÓN EXPORTAR -->
+      <section id="section-exportar" class="section">
+        <div class="section-header">
+          <h2>Exportar video</h2>
+        </div>
+        <p class="section-desc">El video se genera en formato vertical 9:16 (ideal para TikTok, Reels y Shorts).</p>
+
+        <div class="export-info card">
+          <div class="info-row"><span>Resolución:</span> <strong>1080 × 1920</strong></div>
+          <div class="info-row"><span>Duración:</span> <strong id="exportDuracion">1:30</strong></div>
+          <div class="info-row"><span>Mensajes:</span> <strong id="exportMensajesCount">0</strong></div>
+          <div class="info-row"><span>Voces:</span> <strong id="exportVocesStatus">Pendiente</strong></div>
+        </div>
+
+        <div class="export-actions">
+          <button class="btn btn-primary btn-lg" id="btnExportVideo">⬇️ Exportar video MP4</button>
+          <button class="btn btn-secondary" id="btnExportAudio">🎵 Descargar audio MP3</button>
+          <button class="btn btn-secondary" id="btnExportPNG">🖼️ Captura PNG del chat</button>
+        </div>
+
+        <div id="exportProgress" class="progress-bar hidden">
+          <div class="progress-fill" id="exportProgressFill"></div>
+          <span id="exportProgressText">Preparando...</span>
+        </div>
+
+        <div id="exportResult" class="export-result hidden">
+          <p>✅ Video listo</p>
+          <video id="exportVideoPreview" controls playsinline></video>
+          <a id="downloadLink" class="btn btn-primary" download="vchat-video.mp4">Descargar video</a>
+        </div>
+
+        <div class="notice card">
+          <strong>Nota importante:</strong>
+          <p>La exportación se realiza principalmente en tu navegador (Canvas + MediaRecorder). En dispositivos con poca memoria o en el plan gratuito de Render, videos muy largos pueden fallar. Si ocurre un error, reduce la duración o el número de mensajes.</p>
+        </div>
+      </section>
+
+      <!-- SECCIÓN CONFIG -->
+      <section id="section-config" class="section">
+        <div class="section-header">
+          <h2>Configuración e instrucciones</h2>
+        </div>
+
+        <div class="card">
+          <h3>Estado de las APIs</h3>
+          <div id="configStatus" class="config-status">
+            <p>Cargando...</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Cómo configurar las claves (Render)</h3>
+          <ol class="steps-list">
+            <li>Entra a tu servicio en <a href="https://dashboard.render.com" target="_blank" rel="noopener">dashboard.render.com</a></li>
+            <li>Ve a la pestaña <strong>Environment</strong></li>
+            <li>Añade estas variables:
+              <ul>
+                <li><code>OPENAI_API_KEY</code> → tu clave de OpenAI (empieza por sk-)</li>
+                <li><code>ELEVENLABS_API_KEY</code> → tu clave de ElevenLabs</li>
+              </ul>
+            </li>
+            <li>Guarda y espera a que el servicio se reinicie</li>
+          </ol>
+          <p class="hint">Las claves <strong>nunca</strong> se guardan en el navegador ni se envían a terceros. Solo el servidor las usa.</p>
+        </div>
+
+        <div class="card">
+          <h3>Cómo obtener las claves</h3>
+          <ul>
+            <li><strong>OpenAI:</strong> <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a> (necesitas cuenta y créditos)</li>
+            <li><strong>ElevenLabs:</strong> <a href="https://elevenlabs.io" target="_blank" rel="noopener">elevenlabs.io</a> → Profile → API Key</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Límites del plan gratuito de Render</h3>
+          <ul>
+            <li>El servicio se suspende tras ~15 min de inactividad (el primer acceso después puede tardar 30-60 s)</li>
+            <li>Memoria limitada: videos muy largos o con muchos mensajes pueden fallar</li>
+            <li>Archivos temporales se borran periódicamente</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal personaje -->
+    <div id="modalPersonaje" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalPersonajeTitle">Nuevo personaje</h3>
+          <button class="modal-close" id="closeModalPersonaje">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="pjNombre" placeholder="Ej: Ana" maxlength="30" />
+          </div>
+          <div class="form-group">
+            <label>Foto de perfil</label>
+            <div class="upload-row">
+              <input type="file" id="pjFotoInput" accept="image/*" hidden />
+              <button class="btn btn-secondary" id="btnPjFoto">📷 Elegir foto</button>
+              <div id="pjFotoPreview" class="avatar-preview"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Voz (ElevenLabs)</label>
+            <select id="pjVoz">
+              <option value="">— Selecciona una voz —</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" id="btnRefreshVoces">🔄 Actualizar lista de voces</button>
+          </div>
+          <div class="form-group">
+            <label>Color de burbuja</label>
+            <input type="color" id="pjColor" value="#7c3aed" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="btnCancelPersonaje">Cancelar</button>
+          <button class="btn btn-primary" id="btnSavePersonaje">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal mensaje -->
+    <div id="modalMensaje" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalMensajeTitle">Editar mensaje</h3>
+          <button class="modal-close" id="closeModalMensaje">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Personaje</label>
+            <select id="msgPersonaje"></select>
+          </div>
+          <div class="form-group">
+            <label>Texto</label>
+            <textarea id="msgTexto" rows="4" maxlength="500"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="btnCancelMensaje">Cancelar</button>
+          <button class="btn btn-secondary" id="btnRegenMensaje">🔄 Regenerar con IA</button>
+          <button class="btn btn-primary" id="btnSaveMensaje">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+      <div class="spinner"></div>
+      <p id="loadingText">Procesando...</p>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
